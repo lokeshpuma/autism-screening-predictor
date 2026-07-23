@@ -41,10 +41,11 @@ Open http://localhost:8501.
 ```
 ├── app.py              # Streamlit UI
 ├── predict.py          # Preprocessing and inference
-├── best_model.pkl      # Trained Random Forest model
-├── encoders.pkl        # Label encoders for categorical fields
+├── best_model.joblib   # Trained Random Forest model
+├── encoders.joblib     # Label encoders for categorical fields
 ├── train.csv           # Training data (used for result-score lookup)
 ├── requirements.txt
+├── .python-version     # Pins Python 3.12 for Streamlit Cloud
 └── .streamlit/
     └── config.toml     # App theme
 ```

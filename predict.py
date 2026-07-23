@@ -2,15 +2,15 @@
 
 from __future__ import annotations
 
-import pickle
 from pathlib import Path
 
+import joblib
 import numpy as np
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parent
-MODEL_PATH = ROOT / "best_model.pkl"
-ENCODERS_PATH = ROOT / "encoders.pkl"
+MODEL_PATH = ROOT / "best_model.joblib"
+ENCODERS_PATH = ROOT / "encoders.joblib"
 TRAIN_PATH = ROOT / "train.csv"
 
 COUNTRY_MAPPING = {
@@ -83,10 +83,13 @@ def build_result_lookup() -> dict[int, float]:
 
 
 def load_artifacts():
-    with open(MODEL_PATH, "rb") as model_file:
-        model = pickle.load(model_file)
-    with open(ENCODERS_PATH, "rb") as encoder_file:
-        encoders = pickle.load(encoder_file)
+    if not MODEL_PATH.exists() or not ENCODERS_PATH.exists():
+        raise FileNotFoundError(
+            "Model artifacts not found. Expected best_model.joblib and encoders.joblib "
+            "in the project root."
+        )
+    model = joblib.load(MODEL_PATH)
+    encoders = joblib.load(ENCODERS_PATH)
     lookup = build_result_lookup()
     return model, encoders, lookup
 

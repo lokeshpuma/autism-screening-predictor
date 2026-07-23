@@ -3,6 +3,7 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+.venv312/
 .env
 
 # OS / IDE
@@ -10,5 +11,9 @@ venv/
 .idea/
 .vscode/
 
-# Notebooks (not needed for deployment)
+# Notebooks / scripts (not needed for deployment)
 *.ipynb
+save_artifacts.py
+
+# Legacy pickle artifacts
+*.pkl
