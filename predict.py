@@ -14,7 +14,6 @@ warnings.filterwarnings("ignore", category=UserWarning)
 ROOT = Path(__file__).resolve().parent
 MODEL_PATH = ROOT / "best_model.joblib"
 ENCODERS_PATH = ROOT / "encoders.joblib"
-TRAIN_PATH = ROOT / "train.csv"
 
 COUNTRY_MAPPING = {
     "Viet Nam": "Vietnam",
@@ -71,18 +70,26 @@ def _normalize_categoricals(raw: dict) -> dict:
     return data
 
 
+RESULT_LOOKUP: dict[int, float] = {
+    0: 6.463854475,
+    1: 6.202339451,
+    2: 7.095318414,
+    3: 8.224135755,
+    4: 6.2831959605,
+    5: 9.220903954,
+    6: 9.91210388,
+    7: 11.580762105,
+    8: 12.22096627,
+    9: 12.32388114,
+    10: 13.19584858,
+}
+
+
 def _estimate_result(scores: dict[str, int], lookup: dict[int, float]) -> float:
     score_sum = sum(scores[f"A{i}_Score"] for i in range(1, 11))
     if score_sum in lookup:
         return lookup[score_sum]
     return float(np.mean(list(lookup.values())))
-
-
-def build_result_lookup() -> dict[int, float]:
-    df = pd.read_csv(TRAIN_PATH)
-    score_cols = [f"A{i}_Score" for i in range(1, 11)]
-    df["score_sum"] = df[score_cols].sum(axis=1)
-    return df.groupby("score_sum")["result"].median().to_dict()
 
 
 def load_artifacts():
@@ -93,8 +100,7 @@ def load_artifacts():
         )
     model = joblib.load(MODEL_PATH)
     encoders = joblib.load(ENCODERS_PATH)
-    lookup = build_result_lookup()
-    return model, encoders, lookup
+    return model, encoders, RESULT_LOOKUP
 
 
 def encode_features(raw: dict, encoders: dict, lookup: dict[int, float]) -> pd.DataFrame:
