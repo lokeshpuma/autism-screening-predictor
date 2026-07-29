@@ -2,11 +2,14 @@
 
 from __future__ import annotations
 
+import warnings
 from pathlib import Path
 
 import joblib
 import numpy as np
 import pandas as pd
+
+warnings.filterwarnings("ignore", category=UserWarning)
 
 ROOT = Path(__file__).resolve().parent
 MODEL_PATH = ROOT / "best_model.joblib"
